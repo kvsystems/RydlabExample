@@ -1,0 +1,15 @@
+{
+    "name": "kvsystems/rydlab-example",
+    "description": "Test example from Rydlab LTD",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandr Kalugin",
+            "email": "ak777-07@mail.ru"
+        }
+    ],
+    "require": {
+        "textalk/websocket": "^1.2"
+    }
+}
