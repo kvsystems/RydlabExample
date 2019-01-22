@@ -49,7 +49,7 @@ class DevTools {
      * Available domains
      * @var array
      */
-    private $_domains = ['Network','Page', 'DOM', 'Input'];
+    private $_domains = ['Network','Page', 'Runtime', 'DOM'];
 
     /**
      * Current domain to call methods on
