@@ -57,20 +57,36 @@ class DevTools {
      */
     private $_current;
 
+    /**
+     * Gets WebSocket address
+     * @param $tab
+     * @return null
+     */
     private function _getWsUrl($tab)   {
         return $this->_tabs[$tab]['webSocketDebuggerUrl'] ?? null;
     }
 
+    /**
+     * Close WebSocket client
+     */
     private function _close() {
         if ($this->_client) {
             $this->_client->close();
         }
     }
 
+    /**
+     * Creates WebSocket client
+     * @param $wsUrl
+     * @return Client
+     */
     private function _getWsClient($wsUrl) {
         return new Client($wsUrl);
     }
 
+    /**
+     * Gets DevTools tabs
+     */
     private function _getTabs() {
         $ch = curl_init('http://'.$this->_host.':'.$this->_port.'/json');
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
@@ -84,12 +100,23 @@ class DevTools {
         $this->_tabs = json_decode($result, true);
     }
 
+    /**
+     * DevTools constructor.
+     * @param string $host
+     * @param int $port
+     * @param int $timeout
+     */
     public function __construct($host = 'localhost', $port = 9222, $timeout = 5)   {
         $this->_host    = $host;
         $this->_port    = $port;
         $this->_timeout = $timeout;
     }
 
+    /**
+     * Gets DevTools domain
+     * @param $name
+     * @return $this
+     */
     public function __get($name)    {
         if (in_array($name, $this->_domains)) {
             $this->_current = $name;
@@ -98,6 +125,13 @@ class DevTools {
         die('Bad domain');
     }
 
+    /**
+     * Calls DevTools domain function
+     * @param $name
+     * @param $arguments
+     * @return mixed|null
+     * @throws \WebSocket\BadOpcodeException
+     */
     public function __call($name, $arguments)
     {
         $payload = [
@@ -112,6 +146,10 @@ class DevTools {
         return $response;
     }
 
+    /**
+     * Connects to tab
+     * @param int $tab
+     */
     public function connect($tab = 0)   {
         $this->_getTabs();
         $this->_close();
@@ -120,6 +158,12 @@ class DevTools {
         $this->_client->setTimeout($this->_timeout);
     }
 
+    /**
+     * Waits result from WebSocket
+     * @param $resultId
+     * @param null $timeout
+     * @return mixed|null
+     */
     public function waitResult($resultId, $timeout = null)
     {
         $timeout = $timeout?? $this->_timeout;
@@ -143,6 +187,12 @@ class DevTools {
         return $result;
     }
 
+    /**
+     * Waits event from WebSocket
+     * @param $eventName
+     * @param null $timeout
+     * @return array
+     */
     public function waitEvent($eventName, $timeout = null)
     {
         $timeout = $timeout?? $this->_timeout;
